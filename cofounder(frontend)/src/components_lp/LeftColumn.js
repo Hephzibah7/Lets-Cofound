@@ -44,11 +44,17 @@ const LeftColumn = () => {
   const handlePost = () =>{
     Navigate("/CreatePostForm");
   }
+  const handleexplore = () =>{
+    Navigate("/projectpage");
+  }
   const handleProject = () =>{
     Navigate("/StartupOptions");
   }
   const handleProfileForm = () => {
     Navigate("/ProfileForm");
+  };
+  const handleMessaging = () => {
+    Navigate("/chatmessage");
   };
 
   const handleDashboard = () => {
@@ -109,11 +115,11 @@ const LeftColumn = () => {
             <PeopleAlt />
             <span>Network</span>
           </div>
-          <div className="flex items-center space-x-2 cursor-pointer p-1 hover:bg-white hover:rounded-full hover:text-black transition duration-300">
-            <Explore />
-            <span>Explore</span>
+          <div onClick={handleexplore} className="flex items-center space-x-2 cursor-pointer p-1 hover:bg-white hover:rounded-full hover:text-black transition duration-300">
+           <Explore/>
+            <span>Explore Projects</span>
           </div>
-          <div className="flex items-center space-x-2 cursor-pointer p-1 hover:bg-white hover:rounded-full hover:text-black transition duration-300">
+          <div onClick={handleMessaging} className="flex items-center space-x-2 cursor-pointer p-1 hover:bg-white hover:rounded-full hover:text-black transition duration-300">
             <Message />
             <span>Messaging</span>
           </div>

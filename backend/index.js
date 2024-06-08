@@ -10,6 +10,8 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import { Server } from 'socket.io';
+import http from 'http';
 // Custom authentication middleware
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,6 +33,38 @@ mongoose.connect(mongoURI, {
 
 // Secret key (this should be stored securely and not hard-coded in real applications)
 const secretKey = 'your_secret_key';
+
+// const server = http.createServer(app);
+
+ const server = http.createServer(app).listen(9003, function(){
+  console.log("Express server listening on port " + 9003);
+});
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ["GET", "POST"] // Adjust this to your frontend's URL in a production environment
+  }
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+// Socket.io connection
+io.on('connection', (socket) => {
+  console.log('New client connected');
+
+  socket.on('sendMessage', async (data) => {
+    const { sender, receiver, message } = data;
+    const newMessage = new Message({ sender, receiver, message });
+    await newMessage.save();
+    io.emit('receiveMessage', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
 
 
 // User schema
@@ -330,6 +364,18 @@ app.get("/getProfileDetails", authenticateToken, async (req, res) => {
   }
 }); 
 
+app.post("/getChatProfileDetails", authenticateToken, async (req, res) => {
+  try {
+    console.log("hello");
+    const { userIds } = req.body;
+    console.log(req.body);
+    const users = await Profile.find({ userId: { $in: userIds } });
+    console.log(users);
+    res.json(users);
+  } catch (err) {
+    res.status(500).send({ error: 'An error occurred while fetching user details.' });
+  }
+}); 
 
 
 //project schema
@@ -360,6 +406,29 @@ const projectSchema = new mongoose.Schema({
 });
 
 const Project = mongoose.model("Project", projectSchema);
+
+const interestRequestSchema = new mongoose.Schema({
+  projectId: {
+  type: String,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending',
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const InterestRequest = mongoose.model('InterestRequest', interestRequestSchema);
 
 // API endpoint
 app.post("/projectform", authenticateToken,
@@ -399,8 +468,8 @@ app.post("/projectform", authenticateToken,
        skillSet: skillSet,
       //  postImage: files.postImage ? files.postImage[0].filename : null,
       //  pitchDeck: files.pitchDeck ? files.pitchDeck[0].filename : null,
-      postImage: req.files['postImage'][0].filename,
-      pitchDeck: req.files['pitchDeck'][0].filename,
+      postImage: files.postImage ? files.postImage[0].filename : null,
+        pitchDeck: files.pitchDeck ? files.pitchDeck[0].filename : null,
      });
 
     console.log(newProject);
@@ -414,12 +483,123 @@ app.post("/projectform", authenticateToken,
 // Endpoint to fetch all projects
 app.get("/projects", authenticateToken, async (req, res) => {
   try {
+    console.log("ayashheph");
     const projects = await Project.find().populate("userId");
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ error });
   }
 });
+app.get('/projectsingle/:projectId', authenticateToken, async (req, res) => {
+  try {
+    console.log("ayash");
+    const project = await Project.findById(req.params.projectId);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+    res.status(200).json(project);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+const notificationSchema = new mongoose.Schema({
+  recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  message: { type: String, required: true },
+  projectId: String,
+  status: String,
+  type: { type: String, required: true }, // 'interestRequest' or 'interestApproval'
+  timestamp: { type: Date, default: Date.now }
+});
+
+const Notification = mongoose.model('Notification', notificationSchema);
+
+
+
+app.post('/showinterest/:id', authenticateToken, async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const userId = req.user.userId;
+    const profile = await Profile.findOne({ userId }).populate("userId");
+    const username=profile.username;
+    const project = await Project.findById( projectId );
+    const projectowner = project.username;
+
+    const ownerNotification = new Notification({
+      recipient: project.userId,
+      sender: userId,
+      message: `${username} is interested in your project: ${project.concept}`,
+      projectId,
+      status: "RequestSent",
+      type: 'interestRequest',
+    });
+
+    await ownerNotification.save();
+     // Create a notification for the user who showed interest
+     const userNotification = new Notification({
+      recipient: userId,
+      sender: project.userId,
+      message: 'Your interest has been successfully sent.',
+      projectId,
+      status: "RequestSent",
+      type: 'interestConfirmation',
+    });
+
+    await userNotification.save();
+
+  res.status(200).send({ message: 'Interest shown successfully.' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+
+app.post('/projects/:notificationId/approveInterest', authenticateToken,async (req, res) => {
+  const userId = req.user.userId;
+  const { notificationId } = req.params;
+ 
+  const notification = await Notification.findById( notificationId );
+  console.log(notification);
+  // const { username } = req.body;
+  const project = await Project.findById( notification.projectId );
+ 
+
+      // Create a notification for the user who showed interest
+      const userNotification = new Notification({
+        recipient:notification.sender,
+        sender: project.userId,
+        message: `Your interest in the project ${project.concept} has been approved.`,
+        status: "Approved",
+        projectId: notification.projectId,
+        type: 'interestApproval',
+      });
+  
+      await userNotification.save();
+
+  res.status(200).send({ message: 'Interest approved successfully.' });
+
+    })
+
+
+    app.get('/notifications/:userId', authenticateToken, async (req, res) => {
+      try {
+        const { userId } = req.params; // Extract the username correctly from req.params
+
+        const notifications = await Notification.findOne({ recipient: userId }).sort({ timestamp: -1 });
+        console.log(notifications);
+        res.status(200).send(notifications);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).send({ message: 'An error occurred while fetching notifications' });
+      }
+    });
+    
+
 
 
 
@@ -559,6 +739,36 @@ app.post('/commentPost/:postId', authenticateToken, async (req, res) => {
 });
 
 
+//sidebar
+
+// Get followers of a user
+app.get('/followers/:userId', authenticateToken,async (req, res) => {
+  try {
+   const userId=req.params.userId;
+    const user = await Profile.findOne(({ userId: userId })).populate('followers');
+   
+    res.json(user.followers);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// Get following of a user
+app.get('/following/:userId',authenticateToken, async (req, res) => {
+  try {
+    const userId=req.params.userId;
+    const user = await Profile.findOne(({ userId: userId })).populate('followers');
+   
+    res.json(user.following);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+
+
+
+
   app.get('/getUserDetails', authenticateToken, async (req, res) => {
     try {
         const { userId } = req.user; // Access userId from the authenticated token
@@ -586,34 +796,50 @@ app.post('/commentPost/:postId', authenticateToken, async (req, res) => {
     }
 });
 
-// 
+
+// Get post details
 app.get('/getPostDetails', authenticateToken, async (req, res) => {
   try {
     const { userId } = req.user; // Access userId from the authenticated token
-    // console.log(userId);
-    // Fetch all posts made by the user
-    const posts = await Post.find({ postPrivacy: "public" }).populate('userId', 'username profileImage');
-    // console.log(posts);
+
+    // Fetch all posts
+    const posts = await Post.find().populate('userId', 'username profileImage');
+
     if (!posts || posts.length === 0) {
-      return res.status(404).json({ message: 'No posts found for this user' });
+      return res.status(404).json({ message: 'No posts found' });
     }
 
-    // Transform posts data if needed, such as selecting specific fields or formatting
-    // const formattedPosts = posts.map(post => ({
-    //   postContent: post.postContent,
-    //   postPrivacy: post.privacy,
-    //   imageUrl: `http://localhost:9002/uploads/${post.imageUrl}`
-    //   // Add more fields as needed
-    // }));
+    // Filter posts
+    const filteredPosts = [];
+    for (let post of posts) {
+      if (post.postPrivacy === "public" || post.userId._id.toString() === userId) {
+        // Include all public posts
+        filteredPosts.push(post);
+      } else {
+        // Include private posts only if the requesting user is a follower of the post owner
+        const postOwner = await Profile.findOne({ userId: post.userId._id });
+        if (postOwner.followers.includes(userId)) {
+          filteredPosts.push(post);
+        }
+      }
+    }
+    console.log(filteredPosts);
 
-    // Send the array of posts to the frontend
-    res.status(200).json({ posts});
+    if (filteredPosts.length === 0) {
+      return res.status(404).json({ message: 'No posts found' });
+    }
+
+    // Send the array of filtered posts to the frontend
+    res.status(200).json({ posts: filteredPosts });
 
   } catch (error) {
     console.error('Error fetching user posts:', error);
     res.status(500).json({ message: 'Error fetching user posts' });
   }
 });
+
+
+
 
 app.get('/checkProfile/:userId', async (req, res) => {
   try {
@@ -671,16 +897,6 @@ app.get('/getUserDetails/:username', authenticateToken, async (req, res) => {
   }
 });
 
-// Endpoint to search users by username
-// app.get('/searchUser', async (req, res) => {
-//   const username = req.query.username;
-//   try {
-//     const users = await User.find({ username: new RegExp(username, 'i') });
-//     res.json(users);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error searching for users' });
-//   }
-// });
 
 // Get follow status
 app.get('/followStatus/:username', authenticateToken, async (req, res) => {
@@ -756,6 +972,92 @@ console.log(currentUserId);
     res.status(500).json({ message: 'Error unfollowing user' });
   }
 });
+
+const messageSchema = new mongoose.Schema({
+  sender: String,
+  receiver: String,
+  message: String,
+  timestamp: { type: Date, default: Date.now }
+});
+
+
+const Message = mongoose.model('Message', messageSchema);
+
+// Get messages between two users
+app.get("/messages/:user1/:user2", authenticateToken,async (req, res) => {
+  console.log("byebye");
+  const { user1, user2 } = req.params;
+  try {
+    const messages = await Message.find({
+      $or: [
+        { sender: user1, receiver: user2 },
+        { sender: user2, receiver: user1 }
+      ]
+    }).sort('timestamp');
+    res.json(messages);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+//stories
+
+
+const storySchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    
+  },
+  filePath: String,
+  caption: String,
+  fileType: String,
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Story = mongoose.model('Story', storySchema);
+
+app.post('/upload', upload.single('file'), authenticateToken, async (req, res) => {
+  try {
+    const userId = req.userId; // Retrieve userId from authenticated user
+    const { caption } = req.body;
+
+    if (!req.file) {
+      return res.status(400).send('No file uploaded.');
+    }
+
+    const newPost = {
+      filePath: `${req.file.filename}`, // Store relative path
+      fileType: req.file.mimetype,
+      caption,
+    };
+
+    let story = await Story.findOne({ userId });
+    if (!story) {
+      story = new Story({ userId, posts: [newPost] });
+    } 
+
+    await story.save();
+    res.status(201).json(newPost);
+  } catch (error) {
+    console.error('Error during file upload:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+// Get all stories
+app.get('/stories', authenticateToken,  async (req, res) => {
+  try {
+      const stories = await Story.find().sort({ createdAt: -1 });
+      res.json(stories);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+});
+
+
 
 
 // Protected endpoint example

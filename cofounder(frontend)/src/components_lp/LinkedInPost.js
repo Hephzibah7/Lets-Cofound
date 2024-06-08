@@ -92,6 +92,7 @@ const LinkedInPost = () => {
 
     fetchData();
   }, []);
+  console.log(postDetails);
   
   const handleLike = async (postId, isLiked) => {
     try {
@@ -181,13 +182,13 @@ const LinkedInPost = () => {
   };
   
   if (!Array.isArray(postDetails)) {
-    return <p>No posts found</p>;
+    return <p>Follow people to see posts</p>;
   }
 
   return (
     <div>
       {postDetails.length === 0 ? (
-        <p>No posts found</p>
+        <p>Follow people to see posts</p>
       ) : (
         <div className="flex flex-col justify-center items-center">
           {postDetails.slice().reverse().map((post) => (
@@ -200,10 +201,12 @@ const LinkedInPost = () => {
                     <h3 className="text-xl text-white w-full">{post.designation}</h3>
                   </div>
                 </div>
-                <DeleteIcon 
-                  className="cursor-pointer" 
-                  onClick={() => handleDelete(post._id)} 
-                />
+                {userDetails && userDetails.userId._id === post.userId._id && (
+                  <DeleteIcon 
+                    className="cursor-pointer" 
+                    onClick={() => handleDelete(post._id)} 
+                  />
+                )}
               </div>
               <p className="text-base mb-4 text-left">{post.postContent}</p>
               <div className="mb-4">

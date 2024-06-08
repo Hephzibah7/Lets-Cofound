@@ -137,12 +137,11 @@ const ProjectForm = () => {
         formDataToSend.append(key, JSON.stringify(formData[key]));
       } else if (key === "postImage" || key === "pitchDeck") {
         formDataToSend.append(key, formData[key]);
-        console.log(key, formData[key].name);
       } else {
         formDataToSend.append(key, formData[key]);
       }
     });
-    console.log(formDataToSend);
+    console.log(formData);
     try {
     
       const token = localStorage.getItem("token");
@@ -460,7 +459,7 @@ const ProjectForm = () => {
                   accept="image/*"
                   onChange={handleChange}
                   className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  
+                  required
                 />
               </div>
               <div className="mb-4">
@@ -474,7 +473,7 @@ const ProjectForm = () => {
                   accept=".pdf"
                   onChange={handleChange}
                   className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  
+                  required
                 />
               </div>
             </>

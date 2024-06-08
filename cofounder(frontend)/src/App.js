@@ -19,6 +19,9 @@ import CreatePostForm from './CreatePostForm.js';
 import UserProfile from './UserProfile.js';
 import ProjectPage from './components_lp/Project_comp/ProjectPage.js'
 import ProjectForm from './components_lp/ProjectForm.js';
+import Notifications from './components_lp/Notifications.js';
+import DetailedProject from './components_lp/Project_comp/DetailedProject.js'
+import ChatMessage from './chatmessage.js';
 const AuthenticatedStartupOptions = withAuth(StartupOptions);
 const AuthenticatedMainSlider = withAuth(MainSlider);
 function App() {
@@ -40,6 +43,9 @@ function App() {
             <Route path="/user/:username" element={<UserProfile />} />
             <Route exact path="/projectform" element={<ProjectForm/>} />
             <Route exact path="/projectpage" element={<ProjectPage/>} />
+            <Route exact path="/notifications" element={<Notifications />} /> {/* Added route for notifications */}
+            <Route path="/detailedproject/:projectId" element={<DetailedProject/>} />
+            <Route path="/chatmessage" element={<ChatMessage/>} />
           </Routes>
         </Router>
         </AuthProvider>

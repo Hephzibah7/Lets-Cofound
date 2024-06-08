@@ -58,6 +58,7 @@ const ProfileDashboard = () => {
         };
         const userresponse = await axios.get('http://localhost:9002/getUserDetails', config);
         setUserId(userresponse.data.userId._id); // Assuming the user ID is returned as userresponse.data.userId
+       
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -87,7 +88,7 @@ const ProfileDashboard = () => {
     fetchPosts();
   }, [userId]); // Trigger the fetch when userId changes
 
-
+  localStorage.setItem("userId",`${userId}`);
   const suggestedConnections = [
     {
       profilePicture: "/images/profilepic.jpg",
