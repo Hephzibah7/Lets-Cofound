@@ -9,7 +9,7 @@ dotenv.config();
 const secretKey = "your_secret_key";
 
 const CLIENT_ID =
-  "718777143013-6ebfoc39jin37f73gft2krhj5ofhs10s.apps.googleusercontent.com";
+  "903463189852-h50kjs3g1tm3l6t0oj6dmeqmq0m6tkme.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 
 export const register = async (req, res) => {
