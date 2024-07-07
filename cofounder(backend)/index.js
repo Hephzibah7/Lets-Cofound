@@ -53,7 +53,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // MongoDB connection using MongoDB Atlas connection string
 const mongoURI =
-  "mongodb+srv://Ayash:Ayash@cluster0.qs9ylec.mongodb.net/cofound"; // Replace 'your_mongodb_atlas_connection_string' with your actual MongoDB Atlas connection string
+  "mongodb+srv://adminchirag:adminchirag@letscofound.jitivjs.mongodb.net/cofound"; // Replace 'your_mongodb_atlas_connection_string' with your actual MongoDB Atlas connection string
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
