@@ -22,6 +22,7 @@ import Notifications from "./components_lp/Notifications";
 import DetailedProject from "./components_lp/DetailedProject"
 import SearchResults from "./components_lp/SearchResult";
 import {GoogleOAuthProvider} from '@react-oauth/google';
+import Policy from './components_lp/policy'
 function App() {
   return (
     <GoogleOAuthProvider clientId="718777143013-6ebfoc39jin37f73gft2krhj5ofhs10s.apps.googleusercontent.com">
@@ -48,6 +49,7 @@ function App() {
             <Route path="/detailedproject/:projectId" element={<DetailedProject />} />
             <Route path="/search-results" element={<SearchResults />} />
             <Route path="/settings" element={<HomePage />} />
+            <Route path="/policy" element={<Policy />} />
             {/* Add more routes for other components */}
           </Routes>
         </div>

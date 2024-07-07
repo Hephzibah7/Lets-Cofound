@@ -1,6 +1,7 @@
 import React from 'react'
 import './styles.css'
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 function HeroSection() {
   const Navigate = useNavigate();
   const handleChange = () =>{
@@ -22,6 +23,9 @@ function HeroSection() {
       </p>
     </div>
     <div className="m-6 md:m-8 lg:m-10 pt-3 md:pt-4 lg:pt-5 mb-0">
+    <Link to="/policy">
+      <p className='mb-3'>Please read the terms and policies before getting started</p>
+      </Link>
       <button onClick={handleChange} className="hover:bg-gradient-to-t from-black to-purple-500 border-purple-500 border-solid border-2 rounded-full text-lg md:text-xl lg:text-2xl text-white font-bold py-3 md:py-4 lg:py-5 px-5 md:px-6 lg:px-7">
         Get Started 
       </button>
