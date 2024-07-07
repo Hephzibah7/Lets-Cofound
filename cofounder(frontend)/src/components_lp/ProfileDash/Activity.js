@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from "../../context/ThemeContext";
+
 
 const ActivityFeed = ({ activities }) => {
+  const { theme, toggleTheme } = useContext(ThemeContext); 
+
   return (
-    <div className="bg-white p-4 shadow-md rounded mt-8 max-w-xl mx-auto">
+    <div className={`${theme === 'dark' ? 'bg-white text-black' : 'bg-lightGray text-black border-4 border-lightPurple'} p-4 shadow-md rounded mt-8 max-w-xl mx-auto`}>
       {/* Activity Feed Header */}
       <div className="flex justify-between items-center mb-4">
         <div>

@@ -1,10 +1,10 @@
 import React from 'react';
-import Message from './Message';
+
 const messages = [
-  { id: 1, user: 'Bill Gates', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'Designer.png' },
-  { id: 2, user: 'Elon Musk', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'Designer.png' },
-  { id: 3, user: 'Ayash Kumar', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'Designer.png', isCurrentUser: true },
-  { id: 4, user: 'Jeff Bezos', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'Designer.png' },
+  { id: 1, user: 'Bill Gates', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'images/billgates.jpg' },
+  { id: 2, user: 'Elon Musk', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'images/elonmusk.jpg' },
+  { id: 3, user: 'Ayash Kumar', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'images/profilepic.jpg', isCurrentUser: true },
+  { id: 4, user: 'Jeff Bezos', time: '2:18 AM', text: "I don't know, it's look fine for me", avatar: 'images/jeffbezos.jpeg' },
 ];
 
 const ChatMessage = ({ user, time, text, avatar, isCurrentUser }) => {
@@ -37,7 +37,7 @@ const ChatWindow = () => {
     <div className="bg-gray-900 h-screen flex flex-col justify-between">
       <div className="p-6 flex-1 overflow-y-auto">
         {messages.map(msg => (
-          <Message key={msg.id} {...msg} />
+          <ChatMessage key={msg.id} {...msg} />
         ))}
       </div>
       <div className="p-6 bg-gray-800 flex items-center">

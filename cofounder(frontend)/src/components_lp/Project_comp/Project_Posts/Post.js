@@ -12,27 +12,36 @@ const Post = ({
   authorImage,
   authorName,
   authorRole,
-  projectOwnerId,
+  projectOwner,
+  fundingStatus,
 }) => {
   const [interested, setInterested] = useState(null);
+  const [invitation, setInvitation] = useState(null);
   const navigate = useNavigate();
+  const [followers, setFollowers] = useState([]);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   // Assuming you store user ID in local storage
   const userId = localStorage.getItem("userId");
-
   // Load the interested state from local storage on component mount
   useEffect(() => {
     const savedInterest = localStorage.getItem(`interested-${userId}-${projectId}`);
+    const savedInvitation = localStorage.getItem(`invitation-${userId}-${projectId}`);
+    if(savedInvitation === "Approved"){
+      setInterested(savedInvitation);
+    }
+    else
     if (savedInterest === "RequestSent" || savedInterest === "Approved") {
       setInterested(savedInterest);
     }
+    
   }, [projectId, userId]);
 
   const handleShowInterest = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:9002/showinterest/${projectId}`,
+        `http://localhost:9002/api/notifications/showinterest/${projectId}`,
         {},
         {
           headers: {
@@ -53,7 +62,7 @@ const Post = ({
   };
 
   const buttonText = () => {
-    if (userId === projectOwnerId) {
+    if (userId === projectOwner) {
       return "View More";
     }
     switch (interested) {
@@ -68,6 +77,46 @@ const Post = ({
 
   const handleViewMore = () => {
     navigate(`/detailedproject/${projectId}`);
+  };
+  const handleCheckboxChange = async(event, follower) => {
+    if (event.target.checked) {
+      try {
+        const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+        const response = await axios.post(
+          `http://localhost:9002/api/notifications/invitationsent/${projectId}/${follower.userId}`,{}, config);
+        if (response.status === 200) {
+          setInvitation("InvitationSent");
+          localStorage.setItem(`invitation-${follower.userId}-${projectId}`, 'InvitationSent');
+          alert(`Your Invitation has been sent successfully to ${follower.username}`);
+        }
+      } catch (error) {
+        console.error("Error showing interest:", error);
+        alert("An error occurred while sending the invitation.");
+      }
+    }
+  };
+
+  const handleInvitation= async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const userId = localStorage.getItem('userId');
+      const response = await axios.get(`http://localhost:9002/api/profiles/followersdetails/${userId}`, config);
+      console.log(response.data.followers);
+      setFollowers(response.data.followers);
+      setDropdownVisible(true);
+    } catch (error) {
+      console.error('Error fetching followers:', error);
+    }
   };
 
   return (
@@ -87,6 +136,8 @@ const Post = ({
           <div>
             <p className="text-gray-900 font-bold">{authorName}</p>
             <p className="text-gray-600">{authorRole}</p>
+            <p className="text-gray-600">{fundingStatus}</p>
+            
           </div>
         </div>
         <div>
@@ -97,7 +148,7 @@ const Post = ({
             </span>
           </div>
           <h2 className="text-2xl font-bold mb-2">{title}</h2>
-          {userId === projectOwnerId ? (
+          {userId === projectOwner ? (
             <p className="text-gray-700 mb-4">{description}</p>
           ) : interested === "Approved" ? (
             <p className="text-gray-700 mb-4">{description}</p>
@@ -107,14 +158,44 @@ const Post = ({
             </p>
           )}
         </div>
+        
         <div className="ml-auto">
-          {userId === projectOwnerId ? (
+          {userId === projectOwner ? (
+            <>
             <button
               className="cursor-pointer bg-purple-800 p-2 rounded-lg text-white"
               onClick={handleViewMore}
             >
               {buttonText()}
             </button>
+            <button
+              className="cursor-pointer ml-3 bg-purple-800 p-2 rounded-lg text-white"
+              onClick={handleInvitation}
+            >
+              Send an invitation
+            </button>
+            {dropdownVisible && (
+        <div className="absolute right-100 w-1/6 rounded bg-purple-300 shadow-lg z-10 overflow-auto max-h-64 ">
+          {followers.length > 0 ? (
+            <div className="flex flex-col">
+              {followers.map(follower => (
+                <div key={follower.userId} className="flex items-center p-2 hover:bg-gray-100">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    onChange={(event) => handleCheckboxChange(event, follower, projectId)}
+                  />
+                  <img src={`http://localhost:9002/uploads/${follower.profileImage}`} className="w-8 h-8 rounded-full mr-2" alt={follower.username} />
+                  <span className="font-bold">{follower.username}</span>
+                </div>
+              ))}
+            </div>
+          ): (
+            <div>No followers found</div>
+          )}
+        </div>
+      )}
+            </>
           ) : (
             interested === "Approved" ? (
               <button
@@ -123,6 +204,7 @@ const Post = ({
               >
                 {buttonText()}
               </button>
+              
             ) : (
               <button
                 className="cursor-pointer bg-purple-800 p-2 rounded-lg text-white"

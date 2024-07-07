@@ -1,5 +1,4 @@
-// src/components/Sidebar.js
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import AnnouncementIcon from "@mui/icons-material/Announcement";
 import GroupIcon from "@mui/icons-material/Group";
@@ -9,9 +8,11 @@ import SupportIcon from "@mui/icons-material/Support";
 import WorkIcon from "@mui/icons-material/Work";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 
-import GroupSection from "./GroupSection";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const Sidebar = () => {
+  const { theme } = useContext(ThemeContext); // Get the current theme from context
+
   const groupsData = [
     {
       group: "Technical Skills",
@@ -74,7 +75,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="bg-secondary text-white w-64 min-h-screen flex flex-col border-white border-r-2">
+    <div className={`w-64 min-h-screen flex flex-col border-r-2 ${theme === 'dark' ? 'bg-secondary text-white border-white' : 'bg-lightModeBackground text-black border-black'}`}>
       <div className="p-4">
         {/* {groupsData.map((group, index) => (
           <GroupSection
@@ -88,37 +89,46 @@ const Sidebar = () => {
         <div className="text-gray-400 uppercase text-sm">General</div>
         <NavLink
           to="/announcements"
-          className="block p-2 hover:bg-primary rounded"
+          className={`block p-2 rounded ${theme === 'dark' ? 'hover:bg-primary' : 'hover:bg-lightPurple'}`}
         >
           <AnnouncementIcon className="inline mr-2" /> Announcements
         </NavLink>
-        <NavLink to="/members" className="block p-2 hover:bg-primary rounded">
+        <NavLink
+          to="/members"
+          className={`block p-2 rounded ${theme === 'dark' ? 'hover:bg-primary' : 'hover:bg-lightPurple'}`}
+        >
           <GroupIcon className="inline mr-2" /> Members
         </NavLink>
-        <NavLink to="/settings" className="block p-2 hover:bg-primary rounded">
+        <NavLink
+          to="/settings"
+          className={`block p-2 rounded ${theme === 'dark' ? 'hover:bg-primary' : 'hover:bg-lightPurple'}`}
+        >
           <SettingsIcon className="inline mr-2" /> Settings
         </NavLink>
       </div>
       <div className="p-4">
         <div className="text-gray-400 uppercase text-sm">Channel</div>
-        <NavLink to="/general" className="block p-2 hover:bg-primary rounded">
+        <NavLink
+          to="/general"
+          className={`block p-2 rounded ${theme === 'dark' ? 'hover:bg-primary' : 'hover:bg-lightPurple'}`}
+        >
           <ChatIcon className="inline mr-2" /> General Chat
         </NavLink>
         <NavLink
           to="/design-support"
-          className="block p-2 hover:bg-primary rounded"
+          className={`block p-2 rounded ${theme === 'dark' ? 'hover:bg-primary' : 'hover:bg-lightPurple'}`}
         >
           <SupportIcon className="inline mr-2" /> Design Support
         </NavLink>
         <NavLink
           to="/product-showcase"
-          className="block p-2 hover:bg-primary rounded"
+          className={`block p-2 rounded ${theme === 'dark' ? 'hover:bg-primary' : 'hover:bg-lightPurple'}`}
         >
           <WorkIcon className="inline mr-2" /> Product Showcase
         </NavLink>
         <NavLink
           to="/bots-games"
-          className="block p-2 hover:bg-primary rounded"
+          className={`block p-2 rounded ${theme === 'dark' ? 'hover:bg-primary' : 'hover:bg-lightPurple'}`}
         >
           <SportsEsportsIcon className="inline mr-2" /> Bots & Games
         </NavLink>

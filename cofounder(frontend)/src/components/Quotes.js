@@ -2,26 +2,31 @@ import React from 'react'
 
 function Quotes() {
   return (
-    <div className="bg-black h-[255vh] flex flex-col items-center font-alexandria ">
-    <div className="mt-10">
-      <svg xmlns="http://www.w3.org/2000/svg" width="35" height="30" viewBox="0 0 31 26" fill="none" class="block">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.5 26V11.2085C0.5 7.87044 1.63671 5.27503 3.91014 3.42226C6.18356 1.56949 9.42473 0.42874 13.6336 
-        0V7.21201C11.1759 7.54888 9.28648 8.17668 7.96544 9.09541C6.64439 10.0141 5.76882 11.3004 5.33871 
-        12.9541H13.6336V26H0.5ZM17.3664 26V11.2085C17.3664 7.87044 18.5031 5.27503 20.7765 3.42226C23.0499 
-        1.56949 26.2911 0.42874 30.5 0V7.21201C28.0422 7.54888 26.1528 8.17668 24.8318 9.09541C23.5107 10.0141 
-        22.6352 11.3004 22.2051 12.9541H30.5V26H17.3664Z" fill="purple"></path>
-      </svg>
-    </div>
-    <p className="ml-5 text-center mt-3 text-7xl text-white">Unlock <span className="text-purple-500">Assured Returns</span> by 
-    Investing Your<span className="text-purple-500"> Time Wisely</span>  .</p>
-    <p className="mt-3 text-3xl text-white gif-container">Cultivate Success Instantly: Obtain Assistance and Earn Rewards.</p>
+    <div className="hidden lg:block">
+    <div className=" bg-black h-auto lg:h-[150vh] flex flex-col items-center font-alexandria">
+      <div className="mt-10 items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="30" viewBox="0 0 31 26" fill="none" className="block">
+          <path fillRule="evenodd" clipRule="evenodd" d="M0.5 26V11.2085C0.5 7.87044 1.63671 5.27503 3.91014 3.42226C6.18356 1.56949 9.42473 0.42874 13.6336 
+            0V7.21201C11.1759 7.54888 9.28648 8.17668 7.96544 9.09541C6.64439 10.0141 5.76882 11.3004 5.33871 
+            12.9541H13.6336V26H0.5ZM17.3664 26V11.2085C17.3664 7.87044 18.5031 5.27503 20.7765 3.42226C23.0499 
+            1.56949 26.2911 0.42874 30.5 0V7.21201C28.0422 7.54888 26.1528 8.17668 24.8318 9.09541C23.5107 10.0141 
+            22.6352 11.3004 22.2051 12.9541H30.5V26H17.3664Z" fill="purple"></path>
+        </svg>
+      </div>
+      <p className="ml-5 text-center mt-3 text-3xl md:text-5xl lg:text-7xl text-white">Unlock <span className="text-purple-500">Assured Returns</span> by 
+        Investing Your<span className="text-purple-500"> Time Wisely</span>.
+      </p>
+      <p className="text-center lg:text-inline mt-3 text-xl md:text-2xl lg:text-3xl text-white ">
+        <span className="gif-container">Cultivate Success Instantly:Obtain </span>
+        <span className="gif-container">Assistance and Earn Rewards.</span></p>
 
     {/* <div className="border-radius-2 border-purple-500 border-solid border-2 
     h-[135vh] ml-10 mr-10 w-[65vw] mt-10 "> */}
         <div>
 
-        <div className="mt-5 items-center flex flex-col">
-        <div className="flex flex-row m-5 gap-4">
+        <div className="mt-5 items-center justify-center gap-3 lg:flex lg:flex-wrap">
+
+        {/* <div className="flex flex-row m-5 gap-4"> */}
             
             <div className="bg-gradient-to-r from-black to-purple-950 rounded-xl w-[22vw] h-[60vh]">
              <div className="flex flex-col">
@@ -160,10 +165,10 @@ function Quotes() {
                      are so amazing you will find it hard to pass and shortlist :).”</p>
                 </div>
             </div>
-        </div>
+        {/* </div> */}
 
 
-        <div className="flex flex-row m-5 gap-4">
+        {/* <div className="flex flex-row m-5 gap-4"> */}
             
             <div className="bg-gradient-to-r from-black to-purple-950  rounded-xl w-[22vw] h-[60vh]">
              <div className="flex flex-col">
@@ -302,11 +307,11 @@ function Quotes() {
                      are so amazing you will find it hard to pass and shortlist :).”</p>
                 </div>
             </div>
-        </div>
+        {/* </div> */}
 
 
 
-        <div className="flex flex-row m-5 gap-4">
+        {/* <div className="flex flex-row m-5 gap-4"> */}
             
             <div className="bg-gradient-to-r from-black to-purple-950  rounded-xl w-[22vw] h-[60vh]">
              <div className="flex flex-col">
@@ -396,7 +401,7 @@ function Quotes() {
                 <p className="m-5 text-xl text-white text-center">“Holy Grail Product. Starting up is difficult but finding the right cofounder and building an early team is daunting.
                      Glad to have found CF and explore possible connections with very smart folks in the ecosystem. Must say the profiles 
                      are so amazing you will find it hard to pass and shortlist :).”</p>
-                </div>
+                {/* </div> */}
             </div>
 
 
@@ -408,7 +413,7 @@ function Quotes() {
     </div>
     
   </div>
-  
+  </div>
   
 
   )

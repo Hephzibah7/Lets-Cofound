@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
+
 
 const interestsData = {
   topVoices: [
@@ -56,6 +58,8 @@ const interestsData = {
 
 const Interests = () => {
   const [activeTab, setActiveTab] = useState("topVoices");
+  const { theme, toggleTheme } = useContext(ThemeContext); 
+
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -63,7 +67,7 @@ const Interests = () => {
 
   return (
     <div
-      className="bg-white p-4 shadow-md rounded mt-8"
+      className={`${theme === 'dark' ? 'bg-white text-black' : 'bg-lightGray text-black border-4 border-lightPurple'} p-4 shadow-md rounded mt-4`}
       style={{ maxHeight: "500px", overflowY: "auto" }}
     >
       {/* Interests Header */}
@@ -74,7 +78,7 @@ const Interests = () => {
         <button
           className={`py-2 px-4 ${
             activeTab === "topVoices"
-              ? "text-green-500 border-b-2 border-green-500"
+              ? "text-darkPurple border-b-4 border-darkPurple"
               : "text-gray-500"
           }`}
           onClick={() => handleTabClick("topVoices")}
@@ -84,7 +88,7 @@ const Interests = () => {
         <button
           className={`py-2 px-4 ${
             activeTab === "projects"
-              ? "text-green-500 border-b-2 border-green-500"
+              ? "text-darkPurple border-b-4 border-darkPurple"
               : "text-gray-500"
           }`}
           onClick={() => handleTabClick("projects")}
@@ -94,7 +98,7 @@ const Interests = () => {
         <button
           className={`py-2 px-4 ${
             activeTab === "groups"
-              ? "text-green-500 border-b-2 border-green-500"
+              ? "text-darkPurple border-b-4 border-darkPurple"
               : "text-gray-500"
           }`}
           onClick={() => handleTabClick("groups")}
@@ -104,7 +108,7 @@ const Interests = () => {
         <button
           className={`py-2 px-4 ${
             activeTab === "forum"
-              ? "text-green-500 border-b-2 border-green-500"
+              ? "text-darkPurple border-b-4 border-darkPurple"
               : "text-gray-500"
           }`}
           onClick={() => handleTabClick("forum")}

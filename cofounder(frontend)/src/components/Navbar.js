@@ -16,7 +16,7 @@ function Navbar() {
 
   const handleOnClick = () => {
     // Add your logic for continuing to the next step
-    Navigate('/SignUp');
+    Navigate('/signup');
   };
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -65,7 +65,7 @@ function Navbar() {
       </div>
 
       {/* NavLinks */}
-      <div className="flex justify-center items-center space-x-8">
+      {/* <div className="flex justify-center items-center space-x-8">
         <Link
           to="/"
          
@@ -99,7 +99,7 @@ function Navbar() {
           <Notifications />
           <span>Notifications</span>
         </Link>
-      </div>
+      </div> */}
 
 
       <div>

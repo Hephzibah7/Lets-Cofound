@@ -1,18 +1,19 @@
-// src/pages/Home.js
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Topbar from "./Topbar";
 import Sidebar from "../Project_comp/Sidebar";
 import Channel from "../Project_comp/Channel";
-// import ChatWindow from "../Project_comp/ChatWindow";
-import Profile from "../Project_comp/Profile";
 import MiddleColumn from "./MiddleColumn";
+import Navbar from "../Navbar";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const Home = () => {
+  const { theme } = useContext(ThemeContext); // Get the current theme from context
+
   const [messages, setMessages] = useState([
     {
       username: "Jane Cooper",
       time: "2:18 AM",
-      text: "I don't know, it's look fine for me",
+      text: "I don't know, it looks fine to me",
       avatar: "/path/to/avatar1.png",
     },
     {
@@ -31,22 +32,25 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-black">
-      <Topbar />
-      <div className="flex bg-black">
-        <Sidebar />
-        <div className="flex-grow flex flex-col border-white border-r-2">
-          <MiddleColumn />
-
-        </div>
-        <div className="w-1/5 bg-secondary text-white">
-          {/* <Profile user={currentUser} /> */}
-          <div className="">
-            <Channel />
-          </div>
-        
-        </div>
+    <div
+      className={`mb-10 ${
+        theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+      }`}
+    >
+      <nav>
+        <Navbar />
+      </nav>
+      <div
+        className={`flex flex-col border-r-2 ${
+          theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+        }`}
+      >
+        <MiddleColumn />
       </div>
+      {/* <div className={`flex ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+        
+        
+      </div> */}
     </div>
   );
 };

@@ -7,12 +7,12 @@ import Notifications from './Notifications'
 import Quotes from './Quotes'
 import EndingSection from './EndingSection'
 import Footer from './Footer'
-import '../make.css'
+// import '../make.css'
 import Navbar from './Navbar'
 export default function Home() {
   return (
     // <div className="bg-gradient-to-r from-black to-purple-950">
-    <div className='overflow-x-hidden'>
+    <div className='overflow-x-hidden lg:min-h-screen h-[330vh]'>
       <Navbar/>
       <HeroSection />
       {/* <CardContainer/> */}

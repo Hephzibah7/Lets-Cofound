@@ -7,25 +7,26 @@ function HeroSection() {
     Navigate("/SignUp");
   }
   return (
-    <div className="flex flex-col  justify-center items-center bg-black  text-white h-[75vh] font-alexandria ">
-      <div className="mb-0 mt-[100px]  pb-10 mb-[-90px]">
-       <p className=" font-bold text-7xl text-center">BUILDING <span className="text-purple-500">SUCCESS</span></p>
-       </div>
-       <div className="m-0 p-0 flex flex-row w-full ml-[680px]">
-       <p className=" mt-10 ml-10 pt-3 font-bold text-9xl text-center text-purple-500 ">ON A </p>
-       <div className=" mt-12 pt-4 ml-5 flex flex-col">
-       <p className="text-6xl font-bold text-center "> FOUNDATION</p>
-       <p className=" text-6xl font-bold text-center ">OF EQUITY</p>
-       </div>
-       </div>
-       <p className="mt-10 pt-5 text-2xl text-center"><span className="gif-container">Attract 50,000 global members, conquer.</span><br/></p>
-       <p className="m-10 pt-5 mb-0  "><button onClick={handleChange} className=" hover:bg-gradient-to-t from-black to-purple-500 
-        border-radius-2 border-purple-500 border-solid 
-       border-2 rounded-full
-       text-2xl text-white font-bold py-5 px-7 rounded-full">
-          Get Started 
-        </button></p>
+    
+    <div className="flex flex-col justify-center items-center bg-black text-white h-[75vh] font-alexandria">
+    <div className="w-[90vw] md:w-[80vw] lg:w-[75vw] mt-[50px] md:mt-[75px] lg:mt-[100px]">
+      <p className="text-4xl md:text-6xl lg:text-7xl font-bold text-center">
+        <span className="text-purple-500">Unlock</span> your <span className="text-purple-500">startup's potential</span> with 
+        <span className="text-purple-500"> LetsCoFound!</span>
+      </p>
+      <p className="text-lg md:text-2xl lg:text-3xl mt-6 md:mt-8 lg:mt-10 text-center gif-container">
+        <span className="gif-container">We provide comprehensive support services, from AI-driven cofounder matchmaking to </span>
+        <span className="gif-container">seamless startup registration, web development, marketing solutions, and investor </span>
+        <span className="gif-container">fundraising assistance. Join us to transform your innovative ideas into successful </span>
+        <span className="gif-container">ventures without the usual hurdles. Let's build the future, together!</span>
+      </p>
     </div>
+    <div className="m-6 md:m-8 lg:m-10 pt-3 md:pt-4 lg:pt-5 mb-0">
+      <button onClick={handleChange} className="hover:bg-gradient-to-t from-black to-purple-500 border-purple-500 border-solid border-2 rounded-full text-lg md:text-xl lg:text-2xl text-white font-bold py-3 md:py-4 lg:py-5 px-5 md:px-6 lg:px-7">
+        Get Started 
+      </button>
+    </div>
+  </div>
   )
 }
 export default HeroSection;
